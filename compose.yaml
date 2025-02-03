@@ -1,0 +1,80 @@
+services:
+
+  so1:
+    networks:
+      splunknet:
+        aliases:
+          - so1
+    image: ${SPLUNK_IMAGE:-splunk/splunk:latest}
+    hostname: so1
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_STANDALONE_URL=so1
+      - DEBUG=true
+      - SPLUNK_PASSWORD=password
+      - SPLUNK_HTTP_ENABLESSL=false
+      - SPLUNKD_SSL_ENABLE=false
+      - SPLUNK_IGNORE_LICENSE=true
+      - SPLUNK_S2S_PORT=9997
+      - SPLUNK_APPS_URL=/tmp/splunk-apps/splunk-add-on-for-microsoft-windows_901.tgz,/tmp/splunk-apps/splunk-add-on-for-unix-and-linux_920.tgz
+    ports:
+      - 8000:8000
+      - 8089:8089
+      - 9997:9997
+    volumes:
+      - ./splunk-server/so1-etc:/opt/splunk/etc
+      - ./splunk-server/so1-var:/opt/splunk/var
+      - ./splunk-server/apps:/tmp/splunk-apps:z
+      - ./splunk-server/config/splunk_config.yml:/tmp/defaults/default.yml:z
+
+  win_workstation_1:
+    image: dockurr/windows
+    container_name: win_workstation_1
+    environment:
+      VERSION: "11"
+      USERNAME: "user1"
+      PASSWORD: "password1"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+    volumes:
+      - ./win_workstation_1/storage:/storage:z
+      - ./scripts/win_post_install:/oem:z
+      - ./workstation_share:/data:z
+    stop_grace_period: 2m
+
+  win_workstation_2:
+    image: dockurr/windows
+    container_name: win_workstation_2
+    environment:
+      VERSION: "11"
+      USERNAME: "user2"
+      PASSWORD: "password2"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8007:8006
+    volumes:
+      - ./win_workstation_2/storage:/storage:z
+      - ./scripts/win_post_install:/oem:z
+      - ./workstation_share:/data:z
+    stop_grace_period: 2m
+
+  caldera:
+    image: caldera:latest
+    ports:
+      - 8888:8888
+    command: --fresh --insecure
+    restart: unless-stopped
+
+networks:
+  splunknet:
+    driver: bridge
+    attachable: true

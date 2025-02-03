@@ -1,0 +1,25 @@
+splunk:
+  conf:
+    - key: inputs
+      value:
+        directory: /opt/splunk/etc/system/local
+        content:
+          splunktcp:
+            splunktcp://9997:
+              disabled: 0
+    - key: props
+      value:
+        directory: /opt/splunk/etc/system/local
+        content:
+          xmlwineventlog:
+            DATETIME_CONFIG: CURRENT
+            NO_BINARY_CHECK: 1
+            SHOULD_LINEMERGE: false
+    - key: transforms
+      value:
+        directory: /opt/splunk/etc/system/local
+        content:
+          windows_logs:
+            DEST_KEY: MetaData:Sourcetype
+            REGEX: .
+            FORMAT: xmlwineventlog
