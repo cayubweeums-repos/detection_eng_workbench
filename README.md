@@ -113,3 +113,11 @@ Open 'File Explorer' and click on the 'Network' section, you will see a computer
 | Win Workstation 2 | `http://localhost:8007` | `user2/password2` |
 
 **NOTE**: All passwords are insecure and not intended for production use. If you would like to change any credentials, reference the `compose.yml` file. These will still be plane text, so for more advance uses of this stack, you should use secrets in github or some other secret manager.
+
+### Improvements
+- Improve logging via:
+  - Enabling script block logging
+  - Process Creation Auditing
+  - Command Line Process Auditing
+  - Auditing Directory Service Changes
+  - File Auditing
