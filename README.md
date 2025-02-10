@@ -121,3 +121,6 @@ Open 'File Explorer' and click on the 'Network' section, you will see a computer
   - Command Line Process Auditing
   - Auditing Directory Service Changes
   - File Auditing
+- Licensed applications
+- Linux, Mac, and other machines deployed
+- Okta tile
